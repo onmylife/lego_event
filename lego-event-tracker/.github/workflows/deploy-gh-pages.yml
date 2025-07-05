@@ -1,0 +1,57 @@
+name: Deploy Next.js to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # 또는 master 등 기본 브랜치명
+  workflow_dispatch: # 수동 실행 옵션
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    concurrency: # 동시에 하나의 배포만 실행되도록 설정
+      group: "pages"
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # 프로젝트와 호환되는 Node.js 버전 명시
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app
+        # next.config.ts 파일의 REPO_NAME 상수가 실제 GitHub 저장소 이름과 일치해야 합니다.
+        # 해당 설정에 따라 basePath가 결정됩니다.
+        env:
+          NODE_ENV: production
+        run: npm run build
+        # `npm run build`는 "npm run export-data && next build"를 실행합니다.
+        # `next build`는 `output: 'export'` 설정 및 `basePath`에 따라
+        # `out` 디렉토리에 정적 파일을 생성합니다.
+
+      - name: Setup Pages
+        # 이 액션은 GitHub Pages 배포를 위한 설정을 자동으로 감지하려 시도합니다.
+        # next.config.js의 basePath 설정을 존중할 수 있습니다.
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        # GitHub 저장소의 Settings > Pages 에서 배포 소스를 "GitHub Actions"로 지정해야 합니다.
