@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 // GitHub Pages 배포를 위한 저장소 이름입니다.
 // 실제 사용 시에는 본인의 GitHub 저장소 이름으로 변경해야 합니다.
 // 예: const REPO_NAME = 'my-lego-events-repo';
-const REPO_NAME = 'lego-event-tracker'; // <<-- 실제 저장소 이름으로 변경하세요!
+const REPO_NAME = 'lego_event'; // <<-- 사용자 요청에 따라 'lego_event'로 변경됨
 
 const nextConfig: NextConfig = {
   output: 'export',
