@@ -1,0 +1,193 @@
+/* Basic styles for the Jekyll site */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+header {
+  background: #343a40;
+  color: #fff;
+  padding: 1.5rem 0;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+main {
+  padding: 1rem 0;
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem 0;
+  background: #343a40;
+  color: #fff;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.timeline-section {
+  background-color: #fff;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.timeline-section h2 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.5rem;
+}
+
+/* Annual Timeline Styles */
+.annual-timeline-scrollable {
+  overflow-x: auto;
+  padding-bottom: 10px; /* For scrollbar visibility */
+}
+
+.annual-timeline {
+  width: 100%;
+  min-width: 800px; /* Ensure some width for scrolling */
+  border-collapse: collapse;
+  table-layout: fixed; /* Helps with fixed column widths */
+}
+
+.annual-timeline th,
+.annual-timeline td {
+  border: 1px solid #dee2e6;
+  padding: 0.6rem 0.4rem; /* Reduced padding */
+  text-align: center;
+  font-size: 0.85rem; /* Slightly smaller font */
+  min-width: 60px; /* Min width for month columns */
+}
+
+.annual-timeline th {
+  background-color: #e9ecef;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.annual-timeline .site-name-header,
+.annual-timeline .site-name {
+  width: 120px; /* Fixed width for site names */
+  text-align: left;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Sticky site name column */
+.annual-timeline .site-name-header,
+.annual-timeline .site-name {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: #fff; /* Match row background or specific color */
+}
+.annual-timeline thead th.site-name-header {
+  background-color: #e9ecef; /* Match header background */
+  z-index: 2; /* Above tbody sticky cells */
+}
+
+
+.annual-timeline .month-cell {
+  /* Month cells can have specific styles if needed */
+}
+
+.event-marker {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #28a745; /* Green as an example */
+  border-radius: 50%;
+  cursor: default; /* Change if it becomes clickable */
+}
+
+/* Detailed List Styles */
+.detailed-list {
+  margin-top: 1.5rem;
+}
+
+.detailed-list h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  color: #495057;
+}
+
+.detailed-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.detailed-list li {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.8rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.detailed-list li strong {
+  color: #007bff; /* Highlight event name */
+}
+
+.detailed-list a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.detailed-list a:hover {
+  text-decoration: underline;
+}
+
+/* Basic responsive adjustments */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+  .timeline-section h2 {
+    font-size: 1.3rem;
+  }
+  .annual-timeline th,
+  .annual-timeline td {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.3rem;
+    min-width: 50px;
+  }
+  .annual-timeline .site-name-header,
+  .annual-timeline .site-name {
+    width: 100px;
+  }
+  .detailed-list h3 {
+    font-size: 1.2rem;
+  }
+}

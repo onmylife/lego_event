@@ -1,0 +1,37 @@
+source "https://rubygems.org"
+
+# Hello! This is where you manage which Jekyll version is used to run.
+# When you want to use a different version, change it below, save the
+# file and run `bundle install`. Run Jekyll with `bundle exec jekyll serve`.
+# You can find the latest version by running `gem search jekyll` among
+# other methods.
+#
+# Ssee: https://jekyllrb.com/docs/ruby-101/#bundler
+#
+# This will help ensure the proper Jekyll version is running.
+# Happy Jekylling!
+gem "jekyll", "~> 4.3" # Jekyll 최신 안정 버전 또는 특정 버전 명시
+
+# This is the default theme for new Jekyll sites. You may change this to anything else.
+# gem "minima", "~> 2.5" # 테마를 사용한다면 주석 해제
+
+# If you want to use GitHub Pages, remove the gem "jekyll" above and
+# uncomment the line below. To use Jekyll Core maintained versions, use the jekyll-core group instead.
+# group :jekyll_plugins do
+#   gem "jekyll-feed", "~> 0.12"
+#   gem "jekyll-seo-tag", "~> 2.7"
+#   gem "jekyll-paginate", "~> 1.1" # 페이지네이션 사용 시
+#   gem "jekyll-sitemap", "~> 1.4" # 사이트맵 자동 생성
+# end
+
+# For GitHub Pages deployment, it's recommended to use the 'github-pages' gem
+# It ensures you're using the same Jekyll version and plugins as GitHub Pages
+# Remove or comment out the individual 'jekyll' gem and jekyll_plugins group above if using this.
+group :jekyll_plugins do
+  gem "github-pages", "~> 231", group: :jekyll_plugins # GitHub Pages에서 사용하는 버전과 유사하게
+end
+
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+# and Gemfile.lock to record an explicit dependency on it.
+# gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
