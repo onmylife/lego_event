@@ -1,157 +1,87 @@
 ---
 layout: default
-title: 레고 이벤트 정보 타임라인
+title: 레고 이벤트 스케쥴러
 ---
 
 <div class="container">
   <h1 class="page-title">{{ page.title }}</h1>
 
-  {% assign current_year = 'now' | date: "%Y" %}
+  {% assign current_year_month_str = 'now' | date: "%Y-%m" %}
+  {% assign current_year = 'now' | date: "%Y" | plus: 0 %}
+  {% assign current_month_num = 'now' | date: "%-m" | plus: 0 %}
 
-  <!-- 연간 타임라인 섹션 -->
+  {% comment %}현재 월의 총 일수 구하기 - Jekyll/Liquid에서는 직접적인 date 함수가 부족하므로,
+  간단하게는 31일까지 루프를 돌리고, 실제 해당 월의 날짜인지만 체크하거나,
+  또는 JavaScript의 도움 없이 정확한 일수를 구하려면 복잡한 로직이 필요합니다.
+  여기서는 간단히 1일부터 31일까지 표시하고, CSS로 빈 날짜 셀을 처리하거나,
+  또는 JavaScript로 동적으로 생성하는 것을 고려할 수 있습니다.
+  가장 간단한 접근으로, 이번 달의 첫날과 다음 달의 첫날을 이용해 일수를 계산하는 시도를 합니다.
+  {% endcomment %}
+
+  {% assign first_day_current_month_str = current_year_month_str | append: "-01" %}
+  {% assign first_day_current_month_ts = first_day_current_month_str | date: "%s" %}
+
+  {% assign next_month_logic_month = current_month_num | plus: 1 %}
+  {% assign next_month_logic_year = current_year %}
+  {% if next_month_logic_month > 12 %}
+    {% assign next_month_logic_month = 1 %}
+    {% assign next_month_logic_year = current_year | plus: 1 %}
+  {% endif %}
+  {% assign first_day_next_month_str = next_month_logic_year | append: "-" | append: next_month_logic_month | append: "-01" %}
+  {% assign first_day_next_month_ts = first_day_next_month_str | date: "%s" %}
+
+  {% assign seconds_in_day = 86400 %}
+  {% assign days_in_current_month = first_day_next_month_ts | minus: first_day_current_month_ts | divided_by: seconds_in_day %}
+
+
+  <!-- 월간 그리드 테이블 섹션 -->
   <section class="timeline-section">
-    <h2>{{ current_year }}년 연간 이벤트 현황</h2>
-    <div class="annual-timeline-scrollable">
-      <table class="annual-timeline">
+    <h2>{{ current_year }}년 {{ current_month_num }}월 이벤트 그리드</h2>
+    <div class="monthly-grid-scrollable">
+      <table class="monthly-grid">
         <thead>
           <tr>
-            <th class="site-name-header">사이트</th>
-            {% for month_num in (1..12) %}
-              <th>{{ month_num }}월</th>
+            <th class="date-header">날짜</th>
+            {% for site_col in site.data.sites %}
+              {% if site_col.id == 1 or site_col.id == 2 or site_col.id == 3 %}
+                <th>{{ site_col.name }}</th>
+              {% endif %}
             {% endfor %}
           </tr>
         </thead>
         <tbody>
-          {% for site in site.data.sites %}
+          {% for day_num in (1..days_in_current_month) %}
             <tr>
-              <td class="site-name">{{ site.name }}</td>
-              {% for month_num in (1..12) %}
-                {% assign month_has_event = false %}
-                {% assign event_details_in_month = "" %}
-                {% for event in site.data.events %}
-                  {% if event.site_id == site.id %}
-                    {% assign event_start_date = event.start_date | date: "%s" | plus: 0 %}
-                    {% assign event_end_date = event.end_date | date: "%s" | plus: 0 %}
+              <td class="date-cell">{{ day_num }}일</td>
+              {% for site_col in site.data.sites %}
+                {% if site_col.id == 1 or site_col.id == 2 or site_col.id == 3 %}
+                  <td class="event-cell">
+                    {% assign events_on_this_day_for_site = "" %}
+                    {% assign event_count_for_cell = 0 %}
+                    {% for event in site.data.events %}
+                      {% if event.site_id == site_col.id %}
+                        {% assign event_start_ts = event.start_date | date: "%s" %}
+                        {% assign event_end_ts = event.end_date | date: "%s" %}
+                        {% assign current_day_str = current_year | append: "-" | append: current_month_num | append: "-" | append: day_num %}
+                        {% assign current_day_ts = current_day_str | date: "%s" %}
 
-                    {% assign current_month_start_str = current_year | append: "-" | append: month_num | append: "-01" %}
-                    {% assign current_month_start = current_month_start_str | date: "%s" | plus: 0 %}
-
-                    {% assign temp_next_month_num = month_num | plus: 1 %}
-                    {% assign temp_year_for_next_month = current_year %}
-                    {% if temp_next_month_num > 12 %}
-                        {% assign temp_next_month_num = 1 %}
-                        {% assign temp_year_for_next_month = current_year | plus: 1 %}
-                    {% endif %}
-                    {% assign next_month_start_str = temp_year_for_next_month | append: "-" | append: temp_next_month_num | append: "-01" %}
-                    {% assign next_month_start = next_month_start_str | date: "%s" | plus: 0 %}
-                    {% assign current_month_end = next_month_start | minus: 86400 %}
-
-
-                    {% if event_start_date <= current_month_end and event_end_date >= current_month_start %}
-                      {% assign month_has_event = true %}
-                      {% assign event_details_in_month = event_details_in_month | append: event.name | append: " (" | append: event.benefit | append: "), " %}
-                    {% endif %}
-                  {% endif %}
-                {% endfor %}
-                <td class="month-cell">
-                  {% if month_has_event %}
-                    <span class="event-marker" title="{{ event_details_in_month | remove_last: ", " }}">●</span>
-                  {% else %}
-                    -
-                  {% endif %}
-                </td>
+                        {% if event_start_ts <= current_day_ts and event_end_ts >= current_day_ts %}
+                          {% if event_count_for_cell > 0 %}
+                            {% assign events_on_this_day_for_site = events_on_this_day_for_site | append: "<br>" %}
+                          {% endif %}
+                          {% assign events_on_this_day_for_site = events_on_this_day_for_site | append: event.name %}
+                          {% assign event_count_for_cell = event_count_for_cell | plus: 1 %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                    {{ events_on_this_day_for_site | default: "-" }}
+                  </td>
+                {% endif %}
               {% endfor %}
             </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-  </section>
-
-  <!-- 상세 타임라인 섹션 (2개월치) -->
-  {% assign current_month_num = 'now' | date: "%-m" | plus: 0 %}
-  {% assign next_month_num_temp = current_month_num | plus: 1 %}
-  {% assign year_for_next_month = current_year %}
-  {% if next_month_num_temp > 12 %}
-    {% assign next_month_num = 1 %}
-    {% assign year_for_next_month = current_year | plus: 1 %}
-  {% else %}
-    {% assign next_month_num = next_month_num_temp %}
-  {% endif %}
-
-  <section class="timeline-section">
-    <h2>{{ current_year }}년 {{ current_month_num }}월 - {{ year_for_next_month }}년 {{ next_month_num }}월 상세 현황 (구현 예정)</h2>
-    <p>이 부분에는 캘린더 스타일의 상세 뷰와 리스트 뷰가 표시됩니다.</p>
-    <!-- 캘린더 및 리스트 뷰 구현은 복잡하여 단계적으로 추가하거나 단순화 필요 -->
-    <!-- 예시: 리스트 뷰 -->
-    <div class="detailed-list">
-      <h3>이벤트 리스트 ({{ current_month_num }}월 - {{ next_month_num }}월)</h3>
-      <ul>
-        {% for event in site.data.events %}
-          {% assign event_start_month = event.start_date | date: "%-m" | plus: 0 %}
-          {% assign event_start_year = event.start_date | date: "%Y" | plus: 0 %}
-          {% assign event_end_month = event.end_date | date: "%-m" | plus: 0 %}
-          {% assign event_end_year = event.end_date | date: "%Y" | plus: 0 %}
-
-          {% comment %}
-            현재 월 또는 다음 월에 시작하거나, 현재 월 또는 다음 월에 종료하거나,
-            현재 월 또는 다음 월을 포함하여 진행 중인 이벤트
-          {% endcomment %}
-          {% assign display_event = false %}
-          {% if event_start_year == current_year and event_start_month == current_month_num %}
-            {% assign display_event = true %}
-          {% elsif event_start_year == year_for_next_month and event_start_month == next_month_num %}
-            {% assign display_event = true %}
-          {% elsif event_end_year == current_year and event_end_month == current_month_num %}
-            {% assign display_event = true %}
-          {% elsif event_end_year == year_for_next_month and event_end_month == next_month_num %}
-            {% assign display_event = true %}
-          {% elsif event_start_date < ('now' | date: "%s") and event_end_date > ('now' | date: "%s") %}
-            {% assign event_start_ts = event.start_date | date: "%s" %}
-            {% assign event_end_ts = event.end_date | date: "%s" %}
-            {% assign current_period_start_str = current_year | append: "-" | append: current_month_num | append: "-01" %}
-            {% assign current_period_start_ts = current_period_start_str | date: "%s" %}
-
-            {% assign next_period_month_num_temp = next_month_num | plus: 1 %}
-            {% assign next_period_year_for_next_month = year_for_next_month %}
-            {% if next_period_month_num_temp > 12 %}
-                {% assign next_period_month_num = 1 %}
-                {% assign next_period_year_for_next_month = year_for_next_month | plus: 1 %}
-            {% else %}
-                {% assign next_period_month_num = next_period_month_num_temp %}
-            {% endif %}
-            {% assign next_period_end_str = next_period_year_for_next_month | append: "-" | append: next_period_month_num | append: "-01" %}
-            {% assign next_period_end_ts = next_period_end_str | date: "%s" | minus: 1 %}
-
-
-            {% if event_start_ts <= next_period_end_ts and event_end_ts >= current_period_start_ts %}
-                {% assign display_event = true %}
-            {% endif %}
-          {% endif %}
-
-
-          {% if display_event %}
-            {% assign site_name = "알 수 없는 사이트" %}
-            {% for site_item in site.data.sites %}
-              {% if site_item.id == event.site_id %}
-                {% assign site_name = site_item.name %}
-                {% break %}
-              {% endif %}
-            {% endfor %}
-            <li>
-              <strong>{{ event.name }}</strong> ({{ site_name }})
-              <br>
-              기간: {{ event.start_date | date: "%Y.%m.%d" }} ~ {{ event.end_date | date: "%Y.%m.%d" }}
-              <br>
-              혜택: {{ event.benefit }}
-              {% if event.url %}
-                | <a href="{{ event.url }}" target="_blank" rel="noopener noreferrer">바로가기</a>
-              {% endif %}
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-
   </section>
 </div>

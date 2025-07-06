@@ -14,13 +14,13 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: 레고 이벤트 트래커
+title: 레고 이벤트 스케쥴러 # <-- 변경된 타이틀
 email: your-email@example.com # 사용자 이메일로 변경 (선택 사항)
 description: >- # this means to ignore newlines until "baseurl:"
   다양한 온라인 쇼핑몰의 레고 관련 할인, 프로모션, 이벤트 정보를
   한눈에 보여주는 타임라인 사이트입니다.
 baseurl: "/lego_event" # GitHub 저장소 이름. 예: /my-awesome-repo
-url: "https://onmylife.github.io" # GitHub Pages 기본 URL (baseurl 제외). 사용자명 변경 필요.
+url: "https://onmylife.github.io" # GitHub Pages 기본 URL (baseurl 제외).
 
 # GitHub 저장소 정보 (선택 사항, jekyll-github-metadata 플러그인 등에서 사용)
 # repository: username/repository-name

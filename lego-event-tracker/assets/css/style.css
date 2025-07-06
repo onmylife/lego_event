@@ -65,26 +65,26 @@ footer {
   padding-bottom: 0.5rem;
 }
 
-/* Annual Timeline Styles */
+/* Annual Timeline Styles - 기존 스타일 유지 또는 필요시 수정 */
 .annual-timeline-scrollable {
   overflow-x: auto;
-  padding-bottom: 10px; /* For scrollbar visibility */
+  padding-bottom: 10px;
 }
 
 .annual-timeline {
   width: 100%;
-  min-width: 800px; /* Ensure some width for scrolling */
+  min-width: 800px;
   border-collapse: collapse;
-  table-layout: fixed; /* Helps with fixed column widths */
+  table-layout: fixed;
 }
 
 .annual-timeline th,
 .annual-timeline td {
   border: 1px solid #dee2e6;
-  padding: 0.6rem 0.4rem; /* Reduced padding */
+  padding: 0.6rem 0.4rem;
   text-align: center;
-  font-size: 0.85rem; /* Slightly smaller font */
-  min-width: 60px; /* Min width for month columns */
+  font-size: 0.85rem;
+  min-width: 60px;
 }
 
 .annual-timeline th {
@@ -95,58 +95,42 @@ footer {
 
 .annual-timeline .site-name-header,
 .annual-timeline .site-name {
-  width: 120px; /* Fixed width for site names */
+  width: 120px;
   text-align: left;
   font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* Sticky site name column */
-.annual-timeline .site-name-header,
-.annual-timeline .site-name {
-  position: -webkit-sticky; /* For Safari */
+  position: -webkit-sticky;
   position: sticky;
   left: 0;
   z-index: 1;
-  background-color: #fff; /* Match row background or specific color */
+  background-color: #fff;
 }
 .annual-timeline thead th.site-name-header {
-  background-color: #e9ecef; /* Match header background */
-  z-index: 2; /* Above tbody sticky cells */
-}
-
-
-.annual-timeline .month-cell {
-  /* Month cells can have specific styles if needed */
+  background-color: #e9ecef;
+  z-index: 2;
 }
 
 .event-marker {
   display: inline-block;
   width: 12px;
   height: 12px;
-  background-color: #28a745; /* Green as an example */
+  background-color: #28a745;
   border-radius: 50%;
-  cursor: default; /* Change if it becomes clickable */
+  cursor: default;
 }
 
-/* Detailed List Styles */
+/* Detailed List Styles - 기존 스타일 유지 또는 필요시 수정 */
 .detailed-list {
   margin-top: 1.5rem;
 }
-
 .detailed-list h3 {
   font-size: 1.3rem;
   margin-bottom: 0.8rem;
   color: #495057;
 }
-
-.detailed-list ul {
-  list-style: none;
-  padding: 0;
-}
-
+.detailed-list ul { list-style: none; padding: 0; }
 .detailed-list li {
   background-color: #f8f9fa;
   border: 1px solid #e9ecef;
@@ -155,19 +139,70 @@ footer {
   border-radius: 4px;
   font-size: 0.95rem;
 }
+.detailed-list li strong { color: #007bff; }
+.detailed-list a { color: #007bff; text-decoration: none; }
+.detailed-list a:hover { text-decoration: underline; }
 
-.detailed-list li strong {
-  color: #007bff; /* Highlight event name */
+
+/* Monthly Grid Table Styles */
+.monthly-grid-scrollable {
+  overflow-x: auto; /* 사이트가 많아지면 가로 스크롤 */
+  padding-bottom: 10px;
 }
 
-.detailed-list a {
-  color: #007bff;
-  text-decoration: none;
+.monthly-grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* 각 열의 너비를 동일하게 또는 지정된 대로 */
 }
 
-.detailed-list a:hover {
-  text-decoration: underline;
+.monthly-grid th,
+.monthly-grid td {
+  border: 1px solid #e0e0e0;
+  padding: 0.75rem 0.5rem; /* 패딩 조정 */
+  text-align: left;
+  font-size: 0.9rem;
+  vertical-align: top; /* 셀 내용이 길어질 경우 상단 정렬 */
 }
+
+.monthly-grid th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.monthly-grid .date-header {
+  width: 80px; /* 날짜 열 너비 고정 */
+  text-align: center;
+}
+.monthly-grid .date-cell {
+  text-align: center;
+  font-weight: bold;
+  background-color: #f9f9f9;
+  width: 80px;
+}
+
+.monthly-grid .event-cell {
+  min-height: 50px; /* 셀의 최소 높이 */
+  line-height: 1.4;
+}
+
+.monthly-grid .event-cell:empty::after {
+  content: "-"; /* 내용이 없을 때 (Liquid에서 '-'를 직접 출력하지 않는 경우) */
+  color: #bbb;
+  display: block; /* 중앙 정렬 등을 위해 */
+  text-align: center;
+}
+
+.monthly-grid .event-cell span { /* 이벤트가 여러 개일 때 span으로 감쌀 경우 */
+  display: block;
+  margin-bottom: 4px;
+  padding: 2px 4px;
+  background-color: #e7f3ff;
+  border-radius: 3px;
+  font-size: 0.85rem;
+}
+
 
 /* Basic responsive adjustments */
 @media (max-width: 768px) {
@@ -189,5 +224,16 @@ footer {
   }
   .detailed-list h3 {
     font-size: 1.2rem;
+  }
+
+  /* Monthly grid responsive */
+  .monthly-grid th,
+  .monthly-grid td {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.25rem;
+  }
+  .monthly-grid .date-header,
+  .monthly-grid .date-cell {
+    width: 60px;
   }
 }
